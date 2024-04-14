@@ -23,7 +23,6 @@ class DBWorkflow(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-
     nodes = relationship("DBNode", back_populates="workflow")
     edges = relationship("DBEdge", back_populates="workflow")
 
@@ -33,12 +32,14 @@ class DBNode(Base):
 
     id = Column(Integer, primary_key=True)
     node_type = Column(Enum(NodeTypes), nullable=False)
-    text = Column(String, nullable=True)
+    text = Column(String(), nullable=True)
     status = Column(Enum(MessageStatus), nullable=True)
     condition = Column(Enum(MessageStatus), nullable=True)
-    workflow_id = Column(Integer, ForeignKey("workflows.id"), nullable=False)
+    workflow_id = Column(Integer, ForeignKey("workflows.id"))
 
-    workflow = relationship("DBWorkflow", back_populates="nodes")
+    workflow = relationship(
+        "DBWorkflow", back_populates="nodes"
+    )
 
 
 class DBEdge(Base):
